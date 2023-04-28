@@ -7,7 +7,6 @@ import com.example.rest_web_services_coding_assig.model.Product;
 import com.example.rest_web_services_coding_assig.repository.ProductRepository;
 import com.example.rest_web_services_coding_assig.service.MyUserDetailsService;
 import com.example.rest_web_services_coding_assig.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,18 +20,18 @@ import java.util.List;
 
 @RestController
 public class ProductRestController {
+    private final ProductRepository prodRepository;
+    private final AuthenticationManager authenticationManager;
+    private final MyUserDetailsService myUserDetailsService;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private ProductRepository prodRepository;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private MyUserDetailsService myUserDetailsService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    public ProductRestController(ProductRepository prodRepository, AuthenticationManager authenticationManager,
+                                 MyUserDetailsService myUserDetailsService, JwtUtil jwtUtil) {
+        this.prodRepository = prodRepository;
+        this.authenticationManager = authenticationManager;
+        this.myUserDetailsService = myUserDetailsService;
+        this.jwtUtil = jwtUtil;
+    }
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
@@ -61,7 +60,6 @@ public class ProductRestController {
             throw new ProductNotFoundException(name);
     }
 
-    //find by price ascending
     @GetMapping("/api/products/price/asc")
     public List<Product> getProductByPriceAsc(){
         return prodRepository.findAllByOrderByPriceAsc();
@@ -82,24 +80,18 @@ public class ProductRestController {
             throw new ProductNotFoundException(code, code);
     }
 
-
-    //insert product
     @PostMapping("/api/products")
     public HttpStatus addProduct(@RequestBody Product product){
          prodRepository.save(product);
          return HttpStatus.OK;
     }
 
-
-    //update/save product
     @PutMapping("/api/products")
     public List<Product> saveOrUpdate(@RequestBody Product product){
         prodRepository.save(product);
         return Collections.singletonList(product);
     }
 
-
-    //delete product by id
     @DeleteMapping("/api/products/{id}")
     public HttpStatus delete(@PathVariable("id") long id) {
         Product product =  prodRepository.findById(id)
