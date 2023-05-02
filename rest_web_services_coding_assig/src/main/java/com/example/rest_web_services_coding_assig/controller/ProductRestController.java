@@ -9,7 +9,7 @@ import com.example.rest_web_services_coding_assig.service.MyUserDetailsService;
 import com.example.rest_web_services_coding_assig.util.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,14 +21,14 @@ import java.util.List;
 @RestController
 public class ProductRestController {
     private final ProductRepository prodRepository;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationProvider authenticationProvider;
     private final MyUserDetailsService myUserDetailsService;
     private final JwtUtil jwtUtil;
 
-    public ProductRestController(ProductRepository prodRepository, AuthenticationManager authenticationManager,
+    public ProductRestController(ProductRepository prodRepository, AuthenticationProvider authenticationProvider,
                                  MyUserDetailsService myUserDetailsService, JwtUtil jwtUtil) {
         this.prodRepository = prodRepository;
-        this.authenticationManager = authenticationManager;
+        this.authenticationProvider = authenticationProvider;
         this.myUserDetailsService = myUserDetailsService;
         this.jwtUtil = jwtUtil;
     }
@@ -36,7 +36,7 @@ public class ProductRestController {
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
         try {
-            authenticationManager.authenticate(
+            authenticationProvider.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or Password", e);
@@ -65,7 +65,7 @@ public class ProductRestController {
         return prodRepository.findAllByOrderByPriceAsc();
     }
 
-    //find by price descending
+
     @GetMapping("/api/products/price/desc")
     public List<Product> getProductByPriceDesc(){
         return prodRepository.findAllByOrderByPriceDesc();

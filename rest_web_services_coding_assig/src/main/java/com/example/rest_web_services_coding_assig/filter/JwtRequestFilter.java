@@ -2,7 +2,6 @@ package com.example.rest_web_services_coding_assig.filter;
 
 import com.example.rest_web_services_coding_assig.service.MyUserDetailsService;
 import com.example.rest_web_services_coding_assig.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
