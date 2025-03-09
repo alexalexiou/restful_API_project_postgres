@@ -1,0 +1,19 @@
+{
+  "name": "Spring Boot Dev Container",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "settings": {
+    "java.home": "/docker-java-home",
+    "editor.formatOnSave": true,
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "extensions": [
+    "vscjava.vscode-java-pack",
+    "redhat.vscode-xml",
+    "batisteo.vscode-django",
+    "mtxr.sqltools"
+  ],
+  "postCreateCommand": "./mvnw clean install",
+  "remoteUser": "root"
+}
